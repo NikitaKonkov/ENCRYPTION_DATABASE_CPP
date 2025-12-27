@@ -1,0 +1,1 @@
+unsigned long long fastHash(char* text);
