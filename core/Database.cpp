@@ -38,7 +38,7 @@ void Database::insert(const std::string& key, const std::string& value) {
 }
 
 void Database::encrypted_insert(const std::string& key, const std::string& value){
-    data[key] = encode(value);
+    data[key] = hexEncode(value);
 }
 
 void Database::clearDisplay() {
@@ -61,7 +61,7 @@ std::string Database::get(const std::string& key) {
 std::string Database::dget(const std::string& key) {
     auto it = data.find(key);
     if (it != data.end()) {
-        return decode(it->second);
+        return hexDecode(it->second);
     }
     return "";
 }
