@@ -23,6 +23,7 @@ void processCommand(const std::string& command, Database& db, SocketServer& serv
     std::unordered_set<std::string> insertCommands = {"INSERT", "insert", "Insert", "put"};
     std::unordered_set<std::string> encryptedInsertCommands = {"SINSERT","sinsert","Sinsert","putsec"};
     std::unordered_set<std::string> getCommands = {"GET", "get", "Get", "fetch"};
+    std::unordered_set<std::string> dgetCommands = {"DGET", "dget", "Dget"};
     std::unordered_set<std::string> updateCommands = {"UPDATE", "update", "Update"};
     std::unordered_set<std::string> deleteCommands = {"DELETE", "delete", "del"};
     std::unordered_set<std::string> listCommands = {"LIST", "list","ls"};
@@ -33,6 +34,8 @@ void processCommand(const std::string& command, Database& db, SocketServer& serv
     if (helpCommands.find(cmd) != helpCommands.end()) {
         std::string helpMessage = "Commands:\n";
         helpMessage += "  INSERT|key|value - Insert a new record\n";
+        helpMessage += "  SINSERT|key|value - Insert a new record with encryption\n";
+        helpMessage += "  DGET|key         - Retrieve a decrypted value by key\n";
         helpMessage += "  GET|key          - Retrieve a value by key\n";
         helpMessage += "  UPDATE|key|value - Update an existing record\n";
         helpMessage += "  DELETE|key       - Delete a record\n";
@@ -115,6 +118,19 @@ void processCommand(const std::string& command, Database& db, SocketServer& serv
         } else {
             server.sendResponse("ERROR: Invalid SINSERT command format\n");
         }
+    } else if (dgetCommands.find(cmd) != dgetCommands.end()) {
+        size_t firstDelim = trimmedCmd.find(':');
+        if (firstDelim != std::string::npos) {
+            std::string key = trimmedCmd.substr(firstDelim + 1);
+            std::string value = db.dget(key);
+            if (!value.empty()) {
+                server.sendResponse("OK: " + value + "\n");
+            } else {
+                server.sendResponse("ERROR: Key not found\n");
+            }
+        } else {
+            server.sendResponse("ERROR: Invalid DGET command format. Use: DGET|key\n");
+        }
     } else if (displayClear.find(cmd) != displayClear.end()) {
         // Clear console display command
         db.clearDisplay();
@@ -135,13 +151,16 @@ int main() {
     std::cout << "========================================\n";
     std::cout << "Commands:\n";
     std::cout << "  INSERT|key|value - Insert new record\n";
+    std::cout << "  SINSERT|key|value - Insert new record with encryption\n";
     std::cout << "  GET|key          - Get record by key\n";
+    std::cout << "  DGET|key         - Get decrypted record by key\n";
     std::cout << "  UPDATE|key|value - Update existing record\n";
     std::cout << "  DELETE|key       - Delete record\n";
     std::cout << "  LIST             - List all records\n";
     std::cout << "  CLEAR            - Clear database\n";
     std::cout << "  HELP             - Show help message\n";
     std::cout << "  HASH             - Show hash of database contents\n";
+    std::cout << "  CLS/CLEAR        - Clear console display\n";
     std::cout << "========================================\n";
     
     Database db(DB_FILE);

@@ -19,6 +19,7 @@ public:
     void insert(const std::string& key, const std::string& value);
     void encrypted_insert(const std::string& key, const std::string& value);
     std::string get(const std::string& key);
+    std::string dget(const std::string& key);
     bool update(const std::string& key, const std::string& value);
     bool remove(const std::string& key);
     void clear();
