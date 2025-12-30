@@ -25,7 +25,7 @@ std::string hexDecode(std::string input) {
 
 // More complex encoding/decoding can be found here
 
-
+// Ceaser Cipher Encoding/Decoding
 std::string ceaserEncode(std::string input) {
     std::reverse(input.begin(), input.end());
     for (char& c : input) {
@@ -41,3 +41,18 @@ std::string ceaserDecode(std::string input) {
     std::reverse(input.begin(), input.end());
     return input;
 }
+
+// Substitution Cipher Encoding/Decoding can be added here
+
+std::string substitutionEncode(std::string input) {
+    
+}
+
+
+
+
+// Vigenere Cipher Encoding/Decoding can be added here
+// AES Encoding/Decoding can be added here
+// RSA Encoding/Decoding can be added here
+// Base64 Encoding/Decoding can be added here
+// Custom Algorithm Encoding/Decoding can be added here 
